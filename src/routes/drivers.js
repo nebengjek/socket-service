@@ -1,0 +1,9 @@
+const { async } = require('validate.js');
+const driverEventHandler = require('../modules/driver/handlers/event_handler');
+
+module.exports = (socket) => {
+  socket.on("driver:location-update", async (data, callback) => {
+    data.metadata = {senderId:socket.id,userId:socket.userId, driverId:socket.driverId}
+    await driverEventHandler.locationUpdate(data,callback);
+  });
+};
