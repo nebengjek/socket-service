@@ -54,7 +54,11 @@ const config = {
       algorithm: process.env.CIPHER_ALGORITHM,
       ivLength: parseInt(process.env.CIPHER_IV_LENGTH) || 16,
       key: process.env.CIPHER_KEY
-    },
+   },
+   kafka: {
+         kafkaHost: process.env.KAFKA_HOST_URL,
+         kafkaClientId: process.env.KAFKA_CLIENT_ID,
+   }
 };
 
 const store = new confidence.Store(config);

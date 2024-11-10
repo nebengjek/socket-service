@@ -7,6 +7,7 @@ const { NotFoundError, UnauthorizedError, ConflictError } = commonHelper.Error;
 const wrapper = commonHelper.Wrapper;
 const _ = require('lodash');
 const config = require('../../../../infra');
+const producer = require('../../../../helpers/events/kafka/producer');
 const REDIS_CLIENT_CONFIGURATION = config.get('/redis');
 
 class Driver {
@@ -24,6 +25,14 @@ class Driver {
     if(!_.isEmpty(statusDriver.data)){
       return wrapper.error(new ConflictError({message:'driver picking passanger',data:statusDriver.data,code:4001}))
     }
+    const dataToKafka = {
+      topic: 'driver-available',
+      body: {
+        ...data,
+        available:true
+      }
+    };
+    await producer.kafkaSendProducerAsync(dataToKafka);
     const geoaddlocation = await this.redisClient.addDriverLocation(data.metadata.driverId,data.latitude,data.longitude);
     return wrapper.data(geoaddlocation);
   }

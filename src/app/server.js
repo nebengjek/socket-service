@@ -11,7 +11,6 @@ const mongoConnectionPooling = require('../helpers/databases/mongodb/connection'
 const mongoConfig = config.get('/mongoDbUrl');
 const routes = require('../routes');
 const jwtAuth = require('../auth/jwt_auth_helper');
-
 class AppServer {
 
   constructor() {
@@ -22,7 +21,7 @@ class AppServer {
     const app = express();
     this.server = http.createServer(app);
     mongoConnectionPooling.init(mongoConfig);
-
+    
     const io = new Server(this.server, {
       cors: {
         origin: '*',
