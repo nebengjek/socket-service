@@ -58,6 +58,9 @@ const config = {
    kafka: {
          kafkaHost: process.env.KAFKA_HOST_URL,
          kafkaClientId: process.env.KAFKA_CLIENT_ID,
+         kafkaSaslMechanism: process.env.KAFKA_SASL_MECHANISM,
+         kafkaSaslUsername: process.env.KAFKA_SASL_USERNAME,
+         kafkaSaslPassword: process.env.KAFKA_SASL_PASSWORD,
    }
 };
 

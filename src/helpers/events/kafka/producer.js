@@ -1,4 +1,4 @@
-const { Kafka,logLevel } = require('kafkajs');
+const { Kafka,logLevel } = require("kafkajs");
 const fs = require('fs');
 const moment = require('moment');
 const timestamp = moment().local();
@@ -9,6 +9,12 @@ const kafkaConfig = config.get('/kafka');
 const kafka = new Kafka({
     clientId: kafkaConfig.kafkaClientId,
     brokers: [kafkaConfig.kafkaHost],
+    ssl: true,
+    sasl: {
+        mechanism: 'plain',
+        username: kafkaConfig.kafkaSaslUsername,
+        password: kafkaConfig.kafkaSaslPassword
+    },
     logLevel: logLevel.INFO
 });
 const ctx = 'kafka-producer';
