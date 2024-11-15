@@ -25,6 +25,12 @@ class Driver {
     if(!_.isEmpty(statusDriver.data)){
       return wrapper.error(new ConflictError({message:'driver picking passanger',data:statusDriver.data,code:4001}))
     }
+    const key = `PASSANGER:PICKUP:${data.metadata.driverId}`;
+    const offerPassanger = await this.redisClient.getData(key);
+    if(!_.isEmpty(offerPassanger.data)){
+      const offerData = JSON.parse(offerPassanger.data)
+      global.io.to(data.socketId).emit('pickup-passanger', {routeSummary:offerData.routeSummary, passangerId: offerData.passangerId});
+    }
     const dataToKafka = {
       topic: 'driver-available',
       body: {
@@ -35,6 +41,16 @@ class Driver {
     await producer.kafkaSendProducerAsync(dataToKafka);
     const geoaddlocation = await this.redisClient.addDriverLocation(data.metadata.driverId,data.latitude,data.longitude);
     return wrapper.data(geoaddlocation);
+  }
+  
+  async broadcastPickupPassanger(data) {
+    if(global.io.sockets.sockets.has(data.socketId)){
+      global.io.to(data.socketId).emit('pickup-passanger', {routeSummary:data.routeSummary, passangerId: data.passangerId});
+    }else{
+      const key = `PASSANGER:PICKUP:${data.driverId}`;
+      await this.redisClient.setDataEx(key,data,300);
+    }
+    return wrapper.data();
   }
 
 }

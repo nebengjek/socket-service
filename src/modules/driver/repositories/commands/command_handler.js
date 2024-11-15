@@ -15,6 +15,16 @@ const locationUpdate = async (data) => {
   return result;
 };
 
+const broadcastPickupPassanger = async (data) => {
+  const postData = async (pyld) => {
+    const result = await driver.broadcastPickupPassanger(pyld);
+    return result;
+  };
+  const result = await postData(data);
+  return result;
+};
+
 module.exports = {
-  locationUpdate
+  locationUpdate,
+  broadcastPickupPassanger
 };

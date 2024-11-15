@@ -10,6 +10,12 @@ class ConsumerKafka {
         const kafka = new Kafka({
             clientId: kafkaConfig.kafkaClientId,
             brokers: [kafkaConfig.kafkaHost],
+            ssl: true,
+            sasl: {
+                mechanism: 'plain',
+                username: kafkaConfig.kafkaSaslUsername,
+                password: kafkaConfig.kafkaSaslPassword
+            },
             logLevel: logLevel.INFO
         });
         this.consumer = kafka.consumer({

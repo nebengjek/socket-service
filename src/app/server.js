@@ -11,6 +11,7 @@ const mongoConnectionPooling = require('../helpers/databases/mongodb/connection'
 const mongoConfig = config.get('/mongoDbUrl');
 const routes = require('../routes');
 const jwtAuth = require('../auth/jwt_auth_helper');
+const observer = require('./observers');
 class AppServer {
 
   constructor() {
@@ -69,8 +70,9 @@ class AppServer {
       commonHelper.log(['Info'], `Socket connected: ${socket.id}, userId: ${socket.userId}, driverId: ${socket.driverId}`);
       routes(socket);
     };
-    
+    global.io = io;
     io.on("connection", onConnection);
+    observer.init();
   }
 }
 
