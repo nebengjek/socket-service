@@ -1,5 +1,6 @@
 
 const commonHelper = require('all-in-one');
+const haversine = require('haversine');
 const Query = require('../queries/query');
 const Command = require('./command');
 const Redis = require('../../../../helpers/databases/redis/redis');
@@ -41,6 +42,37 @@ class Driver {
     await producer.kafkaSendProducerAsync(dataToKafka);
     const geoaddlocation = await this.redisClient.addDriverLocation(data.metadata.driverId,data.latitude,data.longitude);
     return wrapper.data(geoaddlocation);
+  }
+  
+  async tripTracker(data) {
+    try {
+      const {latitude, longitude, orderId} = data;
+      const {driverId} = data.metadata;
+      const currentLocation = { latitude, longitude };
+      const redisKey = `order:${orderId}:driver:${driverId}`;
+      const prevLocationData = await this.redisClient.getData(redisKey);
+      let distance = 0;
+      if (!_.isEmpty(prevLocationData.data)) {
+        const prevLocation = JSON.parse(prevLocationData.data).data;
+        distance = haversine(prevLocation, currentLocation, { unit: 'km' });
+      }
+  
+      const updatedDistance = await this.redisClient.hincrbyfloat(`order:${orderId}:distance`, driverId, distance);
+      if(updatedDistance.error){
+        return wrapper.error(updatedDistance.error);
+      }
+      const distanceUpdate = parseFloat(updatedDistance.data);
+      await this.redisClient.setDataEx(redisKey, currentLocation,60);
+      const dataDistance = {
+        driverId,
+        distance:distanceUpdate.toFixed(2)
+      }
+      await this.redisClient.setData(`trip:${orderId}`, dataDistance);
+      return wrapper.data(distanceUpdate.toFixed(2)); 
+    } catch (error) {
+      return wrapper.error(error);
+    }
+
   }
   
   async broadcastPickupPassanger(data) {

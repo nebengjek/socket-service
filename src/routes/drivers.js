@@ -6,4 +6,8 @@ module.exports = (socket) => {
     data.metadata = {senderId:socket.id,userId:socket.userId, driverId:socket.driverId}
     await driverEventHandler.locationUpdate(data,callback);
   });
+  socket.on("driver:trip-tracker", async (data, callback) => {
+    data.metadata = {senderId:socket.id,userId:socket.userId, driverId:socket.driverId}
+    await driverEventHandler.tripTracker(data,callback);
+  });
 };

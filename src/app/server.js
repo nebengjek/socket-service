@@ -70,7 +70,7 @@ class AppServer {
       commonHelper.log(['Info'], `Socket connected: ${socket.id}, userId: ${socket.userId}, driverId: ${socket.driverId}`);
       routes(socket);
     };
-    global.io = io;
+    global.io = io;    
     io.on("connection", onConnection);
     observer.init();
   }

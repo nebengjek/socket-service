@@ -112,7 +112,31 @@ const locationUpdate = async (data, callback) => {
   });
 };
 
+const tripTracker = async (data, callback) => {
+  const payload = data;
+  const validatePayload = commonHelper.isValidPayload(payload, commandModel.tripTracker);
+  const postRequest = async (result) => {
+    return result.err ? result : commandHandler.tripTracker(result.data);
+  };
+  const result = await postRequest(validatePayload);
+  if (result.err){
+    callback({
+      success: false,
+      message: 'tracker location failed.',
+      statusCode: result.err.code || 500,
+      body: result.err
+    });
+  }
+  callback({
+    success: true,
+    message: 'Trip Tracker received and processed.',
+    statusCode: 200,
+    body: 'ok'
+  });
+};
+
 module.exports = {
   locationUpdate,
+  tripTracker,
   initConsumers
 };

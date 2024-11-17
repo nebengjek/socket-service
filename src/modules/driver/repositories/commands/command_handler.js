@@ -24,7 +24,17 @@ const broadcastPickupPassanger = async (data) => {
   return result;
 };
 
+const tripTracker = async (data) => {
+  const postData = async (pyld) => {
+    const result = await driver.tripTracker(pyld);
+    return result;
+  };
+  const result = await postData(data);
+  return result;
+};
+
 module.exports = {
   locationUpdate,
-  broadcastPickupPassanger
+  broadcastPickupPassanger,
+  tripTracker
 };

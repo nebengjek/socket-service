@@ -60,6 +60,26 @@ class Redis {
     });
   }
 
+  async hincrbyfloat(hash, field, increment) {
+    let client = await pool.getConnection(this.config);
+    if (validate.isEmpty(client)) {
+      client = await pool.createConnectionPool(this.config);
+    }
+    const clientRedis = client;
+  
+    clientRedis.on('error', (err) => {
+      return wrapper.error(`Failed to increment float value in Redis: ${err}`);
+    });
+    return new Promise((resolve, reject) => {
+      clientRedis.hincrbyfloat(hash, field, increment, (err, res) => {
+        if (err) {
+          reject(wrapper.error(err));
+        }
+        resolve(wrapper.data(res));
+      });
+    });
+  }  
+
 
   async addDriverLocation(driverId, lat, lon) {
     let client = await pool.getConnection(this.config);
