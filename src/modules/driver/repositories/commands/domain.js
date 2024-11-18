@@ -29,8 +29,8 @@ class Driver {
     const key = `PASSANGER:PICKUP:${data.metadata.driverId}`;
     const offerPassanger = await this.redisClient.getData(key);
     if(!_.isEmpty(offerPassanger.data)){
-      const offerData = JSON.parse(offerPassanger.data)
-      global.io.to(data.socketId).emit('pickup-passanger', {routeSummary:offerData.routeSummary, passangerId: offerData.passangerId});
+      const offerData = JSON.parse(offerPassanger.data).data
+      global.io.to(data.metadata.senderId).emit('pickup-passanger', {routeSummary:offerData.routeSummary, passangerId: offerData.passangerId});
     }
     const dataToKafka = {
       topic: 'driver-available',
