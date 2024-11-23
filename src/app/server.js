@@ -22,7 +22,7 @@ class AppServer {
     const app = express();
     this.server = http.createServer(app);
     mongoConnectionPooling.init(mongoConfig);
-    
+
     const io = new Server(this.server, {
       cors: {
         origin: '*',
@@ -49,7 +49,7 @@ class AppServer {
           'event.duration': 0,
           'http.response.date': new Date().toISOString(),
         };
-    
+
         const obj = {
           context: 'service-info',
           scope: 'audit-log',
@@ -57,7 +57,7 @@ class AppServer {
           meta: meta,
           ...apm.currentTraceIds,
         };
-        
+
         commonHelper.log('Info',obj);
       };
       socket.onAny((eventName, ...args) => {
@@ -70,8 +70,8 @@ class AppServer {
       commonHelper.log(['Info'], `Socket connected: ${socket.id}, userId: ${socket.userId}, driverId: ${socket.driverId}`);
       routes(socket);
     };
-    global.io = io;    
-    io.on("connection", onConnection);
+    global.io = io;
+    io.on('connection', onConnection);
     observer.init();
   }
 }

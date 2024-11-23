@@ -20,16 +20,16 @@ class Driver {
   }
 
   async locationUpdate(data) {
-    // check is driver idle 
+    // check is driver idle
     const keyStatusDriver = `DRIVER:PICKING-PASSANGER:${data.metadata.driverId}`;
     const statusDriver = await this.redisClient.getData(keyStatusDriver);
     if(!_.isEmpty(statusDriver.data)){
-      return wrapper.error(new ConflictError({message:'driver picking passanger',data:statusDriver.data,code:4001}))
+      return wrapper.error(new ConflictError({message:'driver picking passanger',data:statusDriver.data,code:4001}));
     }
     const key = `PASSANGER:PICKUP:${data.metadata.driverId}`;
     const offerPassanger = await this.redisClient.getData(key);
     if(!_.isEmpty(offerPassanger.data)){
-      const offerData = JSON.parse(offerPassanger.data).data
+      const offerData = JSON.parse(offerPassanger.data).data;
       global.io.to(data.metadata.senderId).emit('pickup-passanger', {routeSummary:offerData.routeSummary, passangerId: offerData.passangerId});
     }
     const dataToKafka = {
@@ -43,7 +43,7 @@ class Driver {
     const geoaddlocation = await this.redisClient.addDriverLocation(data.metadata.driverId,data.latitude,data.longitude);
     return wrapper.data(geoaddlocation);
   }
-  
+
   async tripTracker(data) {
     try {
       const {latitude, longitude, orderId} = data;
@@ -56,7 +56,7 @@ class Driver {
         const prevLocation = JSON.parse(prevLocationData.data).data;
         distance = haversine(prevLocation, currentLocation, { unit: 'km' });
       }
-  
+
       const updatedDistance = await this.redisClient.hincrbyfloat(`order:${orderId}:distance`, driverId, distance);
       if(updatedDistance.error){
         return wrapper.error(updatedDistance.error);
@@ -66,15 +66,15 @@ class Driver {
       const dataDistance = {
         driverId,
         distance:distanceUpdate.toFixed(2)
-      }
+      };
       await this.redisClient.setData(`trip:${orderId}`, dataDistance);
-      return wrapper.data(distanceUpdate.toFixed(2)); 
+      return wrapper.data(distanceUpdate.toFixed(2));
     } catch (error) {
       return wrapper.error(error);
     }
 
   }
-  
+
   async broadcastPickupPassanger(data) {
     if(global.io.sockets.sockets.has(data.socketId)){
       global.io.to(data.socketId).emit('pickup-passanger', {routeSummary:data.routeSummary, passangerId: data.passangerId});

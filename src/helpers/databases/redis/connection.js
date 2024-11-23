@@ -57,19 +57,9 @@ const getConnection = async (config) => {
   return redisClient;
 };
 
-const init = async (config) => {
-  try {
-    await getConnection(config);
-    commonHelper.log(['redis-init'], 'Successfully connected to Redis');
-  } catch (err) {
-    commonHelper.log(['ERROR','redis-init'], `Failed to connect to Redis: ${err}`);
-  }
-};
-
 module.exports = {
   createConnectionPool,
   createConnectionCluster,
-  getConnection,
-  init
+  getConnection
 };
 

@@ -5,71 +5,71 @@ const ctx = 'kafka-confluent-consumer';
 
 
 class ConsumerKafka {
-    constructor(data) {
-        const kafkaConfig = config.get('/kafka');
-        const kafka = new Kafka({
-            clientId: kafkaConfig.kafkaClientId,
-            brokers: [kafkaConfig.kafkaHost],
-            ssl: true,
-            sasl: {
-                mechanism: 'plain',
-                username: kafkaConfig.kafkaSaslUsername,
-                password: kafkaConfig.kafkaSaslPassword
-            },
-            logLevel: logLevel.INFO
-        });
-        this.consumer = kafka.consumer({
-            groupId: data.groupId,
-            sessionTimeout: 60000,
-            heartbeatInterval: 20000,
-            rebalanceTimeout:60000,
-            partitionAssigners: [
-                roundRobin
-            ]        
-        });
-    }
+  constructor(data) {
+    const kafkaConfig = config.get('/kafka');
+    const kafka = new Kafka({
+      clientId: kafkaConfig.kafkaClientId,
+      brokers: [kafkaConfig.kafkaHost],
+      ssl: true,
+      sasl: {
+        mechanism: 'plain',
+        username: kafkaConfig.kafkaSaslUsername,
+        password: kafkaConfig.kafkaSaslPassword
+      },
+      logLevel: logLevel.INFO
+    });
+    this.consumer = kafka.consumer({
+      groupId: data.groupId,
+      sessionTimeout: 60000,
+      heartbeatInterval: 20000,
+      rebalanceTimeout:60000,
+      partitionAssigners: [
+        roundRobin
+      ]
+    });
+  }
 
-    async connect() {
+  async connect() {
+    try {
+      await this.consumer.connect();
+      commonHelper.log(ctx,'Connected to Kafka broker');
+    } catch (error) {
+      commonHelper.log(['ERROR'],`Error connecting to Kafka broker: ${error.message}`);
+      throw error;
+    }
+  }
+
+  async subscribe(topic) {
+    try {
+      await this.consumer.subscribe({ topic });
+      commonHelper.log(ctx,`Subscribed to topic: ${topic}`);
+    } catch (error) {
+      commonHelper.log(['ERROR'],`Error subscribing to topic: ${error.message}`);
+      throw error;
+    }
+  }
+
+  async run(handler) {
+    await this.consumer.run({
+      autoCommitInterval: 5000,
+      autoCommitThreshold: 100,
+      eachMessage: async ({ topic, partition, message }) => {
         try {
-            await this.consumer.connect();
-            commonHelper.log(ctx,'Connected to Kafka broker');
-        } catch (error) {
-            commonHelper.log(['ERROR'],`Error connecting to Kafka broker: ${error.message}`);
-            throw error;
+          if (message && message.value !== undefined) {
+
+            const messageValue = message.value.toString();
+            commonHelper.log(ctx,`Received message on topic: ${topic}`);
+            commonHelper.log(['ERROR'],`Message content: ${messageValue}`);
+            handler(topic, partition, messageValue);
+          } else {
+            commonHelper.log(ctx,`Received message with missing or undefined 'value' on topic: ${topic}`);
+          }
+        } catch(error) {
+          commonHelper.log('ERROR',`Error processing message: ${error.message}`);
         }
-    }
-
-    async subscribe(topic) {
-        try {
-            await this.consumer.subscribe({ topic });
-            commonHelper.log(ctx,`Subscribed to topic: ${topic}`);
-        } catch (error) {
-            commonHelper.log(['ERROR'],`Error subscribing to topic: ${error.message}`);
-            throw error;
-        }
-    }
-
-    async run(handler) {
-        await this.consumer.run({
-            autoCommitInterval: 5000,
-            autoCommitThreshold: 100,
-            eachMessage: async ({ topic, partition, message }) => {
-                try {
-                    if (message && message.value !== undefined) {
-
-                        const messageValue = message.value.toString();
-                        commonHelper.log(ctx,`Received message on topic: ${topic}`);
-                        commonHelper.log(['ERROR'],`Message content: ${messageValue}`);
-                        handler(topic, partition, messageValue);
-                    } else {
-                        commonHelper.log(ctx,`Received message with missing or undefined 'value' on topic: ${topic}`);
-                    }
-                } catch(error) {
-                    commonHelper.log('ERROR',`Error processing message: ${error.message}`);
-                }
-            },
-        });
-    }
+      },
+    });
+  }
 }
 
 module.exports = ConsumerKafka;

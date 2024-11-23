@@ -57,7 +57,7 @@ const verifyToken = async (req, res,next) => {
     return wrapper.response(res, 'fail', result, 'Token is not valid!', ERROR.FORBIDDEN);
   }
   req.userMeta = decodedToken.metadata;
-  next()
+  next();
 };
 
 const authSocket = async (socket, next) => {
@@ -65,7 +65,7 @@ const authSocket = async (socket, next) => {
   const token = socket.handshake.auth.token || socket.handshake.query.token;
 
   if (!token) {
-    socket.emit("error", "Authentication error: Token is required");
+    socket.emit('error', 'Authentication error: Token is required');
     return next(new Error('Authentication error: Token is required'));
   }
   let decodedToken;
@@ -76,8 +76,8 @@ const authSocket = async (socket, next) => {
     socket.mobileNumber = decodedToken.metadata.mobileNumber;
     next();
   } catch (error) {
-    commonHelper.log(['error'],"JWT verification failed:", error);
-    socket.emit("error", "Authentication error: Invalid token");
+    commonHelper.log(['error'],'JWT verification failed:', error);
+    socket.emit('error', 'Authentication error: Invalid token');
     next(new Error('Authentication error: Invalid token'));
   }
 };

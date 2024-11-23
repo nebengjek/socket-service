@@ -66,7 +66,7 @@ class Redis {
       client = await pool.createConnectionPool(this.config);
     }
     const clientRedis = client;
-  
+
     clientRedis.on('error', (err) => {
       return wrapper.error(`Failed to increment float value in Redis: ${err}`);
     });
@@ -78,7 +78,7 @@ class Redis {
         resolve(wrapper.data(res));
       });
     });
-  }  
+  }
 
 
   async addDriverLocation(driverId, lat, lon) {
@@ -194,7 +194,7 @@ class Redis {
 
     clientRedis.publish(key, message);
   }
-  
+
   async incrAttempt(key) {
     let client = await pool.getConnection(this.config);
     if (validate.isEmpty(client)) {
@@ -215,30 +215,6 @@ class Redis {
     });
   }
 
-  async setReminder(key, value, expire, action) {
-    let client = await pool.getConnection(this.config);
-    if (validate.isEmpty(client)) {
-      client = await pool.createConnectionPool(this.config);
-    }
-    const clientRedis = client;
-
-    clientRedis.on('error', (err) => {
-      return wrapper.error(`Failed Get data From Redis: ${err}`);
-    });
-    return new Promise((resolve, reject) => {
-      clientRedis
-        .multi()
-        .set(`${action}-${key}`, value)
-        .expire(`${action}-${key}`, expire)
-        .exec((error, reply) => {
-          if (error) {
-            reject(error);
-          } else {
-            resolve(wrapper.data(reply));
-          }
-        });
-    });
-  }
 }
 
 
