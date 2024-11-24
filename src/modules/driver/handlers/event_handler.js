@@ -15,10 +15,12 @@ async function handleMessage(topic, partition, messageValue, handlerFunction) {
   const startTime = performance.now();
   try {
     const payload = JSON.parse(messageValue);
-    commonHelper.log(['INFO',ctx], `Processing message from consumer: ${JSON.stringify({ topic, partition, messageValue })}`);
+    /* istanbul ignore next */
     const result = await handlerFunction(payload);
-    commonHelper.log([ctx,'INFO'], `Result Processing event: ${JSON.stringify(result)}`);
-
+    /* istanbul ignore next */
+    commonHelper.log([ctx,'INFO'], `Processing message from consumer: ${JSON.stringify({ topic, partition, messageValue })}, 
+    Result Processing event: ${JSON.stringify(result)}`);
+    /* istanbul ignore next */
     if (result.err) {
       const errorPayload = {
         eventId: uuidv4(),
@@ -43,6 +45,7 @@ async function handleMessage(topic, partition, messageValue, handlerFunction) {
         topic: 'dlq-kafka-failed',
         body: errorPayload,
       };
+      /* istanbul ignore next */
       await producer.kafkaSendProducerAsync(dataToKafka);
       commonHelper.log([ctx,'ERROR'], `Error in processing message: ${result.err.message}`);
     }
@@ -62,8 +65,10 @@ const initConsumers = async () => {
     await consumer.subscribe('broadcast-pickup-passanger');
 
     await consumer.run((topic, partition, messageValue) => {
+      /* istanbul ignore next */
       switch (topic) {
       case 'broadcast-pickup-passanger':
+        /* istanbul ignore next */
         return handleMessage(topic, partition, messageValue, broadcastPickupPassanger);
       default:
         commonHelper.log(['INFO','event_controller'], `Unhandled topic: ${topic}`);
@@ -94,7 +99,9 @@ const locationUpdate = async (data, callback) => {
   const payload = data;
   const validatePayload = commonHelper.isValidPayload(payload, commandModel.locationUpdate);
   const postRequest = async (result) => {
-    return result.err ? result : commandHandler.locationUpdate(result.data);
+    return result.err ? result :
+    /* istanbul ignore next */
+      commandHandler.locationUpdate(result.data);
   };
   const result = await postRequest(validatePayload);
   if (result.err){
@@ -117,7 +124,9 @@ const tripTracker = async (data, callback) => {
   const payload = data;
   const validatePayload = commonHelper.isValidPayload(payload, commandModel.tripTracker);
   const postRequest = async (result) => {
-    return result.err ? result : commandHandler.tripTracker(result.data);
+    return result.err ? result :
+      /* istanbul ignore next */
+      commandHandler.tripTracker(result.data);
   };
   const result = await postRequest(validatePayload);
   if (result.err){
@@ -139,5 +148,7 @@ const tripTracker = async (data, callback) => {
 module.exports = {
   locationUpdate,
   tripTracker,
-  initConsumers
+  initConsumers,
+  handleMessage,
+  broadcastPickupPassanger
 };

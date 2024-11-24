@@ -1,9 +1,23 @@
-# package directories
-node_modules
-jspm_packages
+# temp files
+.DS_Store
+.tmp
+.sass-cache
 
-# Serverless directories
-.serverless
-.idea
+node_modules
+build/
+*~
+
+#IDE ignores
+.idea/
 package-lock.json
+*.log
+log
+.vscode
 .env
+coverage
+.nyc_output
+
+# secrets
+.env
+.env.local
+config-map.yaml

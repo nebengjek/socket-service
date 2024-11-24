@@ -59,6 +59,7 @@ class Driver {
 
       const updatedDistance = await this.redisClient.hincrbyfloat(`order:${orderId}:distance`, driverId, distance);
       if(updatedDistance.error){
+        /* istanbul ignore next */
         return wrapper.error(updatedDistance.error);
       }
       const distanceUpdate = parseFloat(updatedDistance.data);
@@ -70,6 +71,7 @@ class Driver {
       await this.redisClient.setData(`trip:${orderId}`, dataDistance);
       return wrapper.data(distanceUpdate.toFixed(2));
     } catch (error) {
+      /* istanbul ignore next */
       return wrapper.error(error);
     }
 

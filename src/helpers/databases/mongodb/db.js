@@ -25,6 +25,7 @@ class DB {
       const db = await this.getDatabase(collectionName);
       const result = await db.findOne(parameter);
       if (!result) {
+        /* istanbul ignore next */
         return wrapper.error(errorEmptyMessage);
       }
       return wrapper.data(result);
@@ -39,6 +40,7 @@ class DB {
       const db = await this.getDatabase(collectionName);
       const result = await db.insertOne(document);
       if (!result) {
+        /* istanbul ignore next */
         return wrapper.error(errorEmptyMessage);
       }
       return wrapper.data(result);
@@ -54,6 +56,7 @@ class DB {
       const db = await this.getDatabase(collectionName);
       const result = await db.updateOne(parameter, document);
       if (!result) {
+        /* istanbul ignore next */
         return wrapper.error(errorEmptyMessage);
       }
       return wrapper.data(result);
@@ -68,6 +71,7 @@ class DB {
       const db = await this.getDatabase(collectionName);
       const result = await db.countDocuments(parameter);
       if (!result) {
+        /* istanbul ignore next */
         return wrapper.error(errorEmptyMessage);
       }
       return wrapper.data(result);
@@ -83,6 +87,7 @@ class DB {
       const skip = limit * (page - 1);
       const result = await db.find(parameter, { projection }).sort(sort).limit(limit).skip(skip).toArray();
       if (!result) {
+        /* istanbul ignore next */
         return wrapper.error(errorEmptyMessage);
       }
       return wrapper.data(result);

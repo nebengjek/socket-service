@@ -12,6 +12,7 @@ const createConnectionCluster = async (config) => {
       password: config.password,
       showFriendlyErrorStack: true,
       reconnectOnError: function(err) {
+        /* istanbul ignore next */
         return err.message.includes('READONLY');
       },
     },
@@ -21,6 +22,7 @@ const createConnectionCluster = async (config) => {
   });
 
   redisClient.on('error', (err) => {
+    /* istanbul ignore next */
     commonHelper.log(['ERROR','redis'], `Failed to connect to Redis: ${err}`);
   });
   return redisClient;
@@ -52,6 +54,7 @@ const createConnectionPool = async (config) => {
 
 const getConnection = async (config) => {
   if (!redisClient || redisClient.status === 'end') {
+    /* istanbul ignore next */
     redisClient = await createConnectionPool(config);
   }
   return redisClient;

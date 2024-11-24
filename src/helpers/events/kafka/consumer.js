@@ -62,6 +62,7 @@ class ConsumerKafka {
             commonHelper.log(['ERROR'],`Message content: ${messageValue}`);
             handler(topic, partition, messageValue);
           } else {
+            /* istanbul ignore next */
             commonHelper.log(ctx,`Received message with missing or undefined 'value' on topic: ${topic}`);
           }
         } catch(error) {

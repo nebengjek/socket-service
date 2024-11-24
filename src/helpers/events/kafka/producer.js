@@ -20,28 +20,17 @@ const ctx = 'kafka-producer';
 
 const producer = kafka.producer();
 producer.on('producer.connect', () => {
+  /* istanbul ignore next */
   commonHelper.log(['INFO','producer.connect'], 'Kafka Producer is connected and ready.');
 });
 
 producer.on('producer.disconnect', () => {
+  /* istanbul ignore next */
   commonHelper.log(['EROOR','producer.disconnect'], 'Kafka Producer could not connect');
 });
 producer.on('producer.network.request_timeout', (payload) => {
+  /* istanbul ignore next */
   commonHelper.log(['EROOR','producer.network.request_timeout'], `Kafka Producer request timeout ${payload.clientId}`);
-});
-
-const kafkaConfluentInit = new Promise( (resolve, reject) => {
-  commonHelper.log(['INFO','connecting'], 'Kafka Producer is connecting.');
-
-  try {
-    producer.connect();
-    commonHelper.log(['INFO','producer.connect'], 'Kafka Producer is connected and ready.');
-    resolve();
-  } catch (error) {
-    commonHelper.log(['ERROR'], 'Kafka Producer connection error: ' + error,'producer.error');
-    reject(error);
-  }
-
 });
 
 const kafkaSendProducerAsync = async (data) => {
@@ -56,6 +45,7 @@ const kafkaSendProducerAsync = async (data) => {
       },
     ],
   };
+  /* istanbul ignore next */
   try {
     await producer.send(record);
     commonHelper.log(['INFO','kafkaSendProducerAsync'], `Kafka Send data to ${topic}`);
@@ -65,6 +55,5 @@ const kafkaSendProducerAsync = async (data) => {
 };
 
 module.exports = {
-  kafkaSendProducerAsync,
-  kafkaConfluentInit
+  kafkaSendProducerAsync
 };

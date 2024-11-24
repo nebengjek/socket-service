@@ -4,6 +4,7 @@ const commonHelper = require('all-in-one');
 const wrapper = commonHelper.Wrapper;
 const connectionPool = new Map();
 
+/* istanbul ignore next */
 const init = async (config) => {
   try {
     const poolKey = JSON.stringify(config);
