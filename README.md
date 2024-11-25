@@ -2,7 +2,7 @@
 This project written in javascript using ExpressJS based on a clean architecture that represents DDD and CQRS patterns. 
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=nebengjek_socket-service&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=nebengjek_socket-service)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=thrive-roadshow_node-thrive&metric=coverage)](https://sonarcloud.io/summary/new_code?id=thrive-roadshow_node-thrive)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=nebengjek_socket-service&metric=coverage)](https://sonarcloud.io/summary/new_code?id=nebengjek_socket-service)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=nebengjek_socket-service&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=nebengjek_socket-service)
 
 ## Project Structure
