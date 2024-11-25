@@ -16,6 +16,7 @@ log
 .env
 coverage
 .nyc_output
+.scannerwork/
 
 # secrets
 .env
