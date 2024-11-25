@@ -2,7 +2,7 @@ require('dotenv').config();
 const confidence = require('confidence');
 
 const config = {
-  port: process.env.PORT,
+  port: process.env.APP_PORT,
   basicAuthApi:
       {
         username: process.env.BASIC_AUTH_USERNAME,
@@ -39,7 +39,7 @@ const config = {
     connection: {
       host: process.env.REDIS_CLIENT_HOST,
       port: process.env.REDIS_CLIENT_PORT,
-      // password: process.env.REDIS_CLIENT_PASSWORD,
+      password: process.env.REDIS_CLIENT_PASSWORD,
       // auth_pass: process.env.REDIS_CLIENT_PASSWORD,
     },
     index: process.env.REDIS_CLIENT_INDEX
