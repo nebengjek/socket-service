@@ -8,8 +8,7 @@ const wrapper = commonHelper.Wrapper;
 const { generateToken, authSocket } = require('../../../src/auth/jwt_auth_helper');
 
 describe('Token Helper', () => {
-  let req;
-  let res;
+
   let next;
   let socket;
 
@@ -24,10 +23,10 @@ describe('Token Helper', () => {
       emit: sinon.stub(),
       disconnect: sinon.stub()
     };
-    req = {
+    let req = {
       headers: {}
     };
-    res = {
+    let res = {
       status: sinon.stub().returnsThis(),
       send: sinon.stub()
     };
