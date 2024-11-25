@@ -1,3 +1,4 @@
+// sonarignore
 const events = require('events');
 events.EventEmitter.defaultMaxListeners = 20;
 const apm = require('elastic-apm-node');
