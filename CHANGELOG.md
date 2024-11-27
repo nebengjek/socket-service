@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.4](https://github.com/nebengjek/user-service/compare/v1.1.3...v1.1.4) (2024-11-27)
+
+
+### Bug Fixes
+
+* adjust tls config redis cluster ([f899cee](https://github.com/nebengjek/user-service/commit/f899ceeff5218fa19ca5c0916f06f4d79408c526))
+
 ### [1.1.3](https://github.com/nebengjek/user-service/compare/v1.1.2...v1.1.3) (2024-11-27)
 
 
