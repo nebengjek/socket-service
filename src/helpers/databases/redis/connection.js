@@ -41,6 +41,9 @@ const createConnectionPool = async (config) => {
     enableOfflineQueue: true,
     enableReadyCheck: true,
     slotsRefreshTimeout: 1000,
+    tls: {
+      rejectUnauthorized: true
+    },
   });
   redisClient.on('connect', () => {
     commonHelper.log(['redis'],'Connected to Redis Cluster');
