@@ -20,9 +20,9 @@ class ConsumerKafka {
     });
     this.consumer = kafka.consumer({
       groupId: data.groupId,
-      sessionTimeout: 60000,
+      sessionTimeout: 45000,
       heartbeatInterval: 20000,
-      rebalanceTimeout:60000,
+      rebalanceTimeout:45000,
       partitionAssigners: [
         roundRobin
       ]
